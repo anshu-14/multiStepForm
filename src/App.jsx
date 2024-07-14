@@ -26,7 +26,8 @@ function App() {
     useMultistepForm([<UserForm {...data} updateFields={updateFields}/>, <AddressForm {...data} updateFields={updateFields}/>, <AccountForm {...data} updateFields={updateFields}/>]);
   function submitForm(e) {
     e.preventDefault();
-    next();
+    if(!isLastStep) return next()
+    alert("Account Created")
   }
   return (
     <div
@@ -38,6 +39,7 @@ function App() {
         margin: "1rem",
         fontFamily: "Arial",
         borderRadius: ".5rem",
+        maxWidth:"max-content"
       }}
     >
       <form onSubmit={submitForm}>
