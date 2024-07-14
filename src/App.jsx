@@ -1,11 +1,33 @@
-import { useState } from 'react'
-import { useMultistepForm } from './useMultistepForm'
-
+import { useState } from "react";
+import { useMultistepForm } from "./useMultistepForm";
+import UserForm from "./UserForm";
+import AddressForm from "./AddressForm";
+import AccountForm from "./AccountForm";
+let InitialData = {
+  firstname: "",
+  lastname: "",
+  age: "",
+  city: "",
+  street: "",
+  area: "",
+  email: "",
+  password: "",
+};
 function App() {
-  const {steps,currentStepIndex,step,back,next,isFirstStep,isLastStep}=useMultistepForm([
-    <div>One</div>,
-    <div>Two</div>
-  ])
+  const [data,setdata]=useState(InitialData);
+  function updateFields (fields)
+  {
+    setdata((prev)=>{
+      return {...prev,...fields}
+    })
+
+  }
+  const { steps, currentStepIndex, step, back, next, isFirstStep, isLastStep } =
+    useMultistepForm([<UserForm {...data} updateFields={updateFields}/>, <AddressForm {...data} updateFields={updateFields}/>, <AccountForm {...data} updateFields={updateFields}/>]);
+  function submitForm(e) {
+    e.preventDefault();
+    next();
+  }
   return (
     <div
       style={{
@@ -18,7 +40,7 @@ function App() {
         borderRadius: ".5rem",
       }}
     >
-      <form>
+      <form onSubmit={submitForm}>
         <div style={{ position: "absolute", top: "0.5rem", right: "0.5rem" }}>
           {currentStepIndex + 1}/{steps.length}
         </div>
@@ -31,15 +53,16 @@ function App() {
             gap: "0.5rem",
           }}
         >
-          {!isFirstStep && <button type="button" onClick={back}>Back</button>}
-          { <button type="button" onClick={next}>
-            {isLastStep?"Finish" : "Next"}
-            </button>}
-          
+          {!isFirstStep && (
+            <button type="button" onClick={back}>
+              Back
+            </button>
+          )}
+          {<button type="submit">{isLastStep ? "Finish" : "Next"}</button>}
         </div>
       </form>
     </div>
   );
 }
 
-export default App
+export default App;
